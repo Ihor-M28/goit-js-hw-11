@@ -41,12 +41,4 @@ export default class GetImagesService {
   resetAllImages() {
     this.allImages = 0;
   }
-
-  // get query() {
-  //   return this.searchQuery;
-  // }
-
-  // set query(newQuery) {
-  //   this.searchQuery = newQuery;
-  // }
 }

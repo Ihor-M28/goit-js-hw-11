@@ -4,7 +4,7 @@ import './css/styles.css';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-const refs = {
+const ref = {
   searchForm: document.querySelector('#search-form'),
   pictureContainer: document.querySelector('.gallery'),
   loadMoreBtn: document.querySelector('.load-more'),
@@ -13,28 +13,28 @@ const refs = {
 
 const getImagesService = new GetImagesService();
 
-refs.searchForm.addEventListener('submit', onFormSearch);
-refs.loadMoreBtn.addEventListener('click', onLoadMore);
+ref.searchForm.addEventListener('submit', onFormSearch);
+ref.loadMoreBtn.addEventListener('click', onLoadMore);
 
 function onFormSearch(evt) {
   evt.preventDefault();
-  refs.loadMoreBtn.disabled = false;
+  ref.loadMoreBtn.disabled = false;
 
   getImagesService.searchQuery = evt.currentTarget.elements.searchQuery.value;
 
   if (getImagesService.searchQuery === '') {
-    refs.loadMoreBtn.classList.add('is-hidden');
+    ref.loadMoreBtn.classList.add('is-hidden');
     clearGalleryMarkup();
     return Notiflix.Notify.warning(`Enter a search name, please!`);
   }
 
   clearGalleryMarkup();
   
-  refs.loadMoreBtn.classList.add('is-hidden');
+  ref.loadMoreBtn.classList.add('is-hidden');
   getImagesService.resetPage();
   getImagesService.resetAllImages();
-  refs.loadMoreBtn.disabled = false;
-  refs.loadMoreBtn.textContent = 'Load more';
+  ref.loadMoreBtn.disabled = false;
+  ref.loadMoreBtn.textContent = 'Load more';
 
   getImagesService.getImages().then(images => {
     clearGalleryMarkup();
@@ -46,7 +46,7 @@ function onFormSearch(evt) {
         'Sorry, there are no images matching your search query. Please try again.'
       );
     } else {
-      refs.loadMoreBtn.classList.remove('is-hidden');
+      ref.loadMoreBtn.classList.remove('is-hidden');
       Notiflix.Notify.info(`Hooray! We found ${images.totalHits} images.`);
     }
 
@@ -64,8 +64,8 @@ async function onLoadMore() {
     smoothScroll();
 
     if (getImagesService.allImages === getImagesService.totalImages) {
-      refs.loadMoreBtn.disabled = true;
-      refs.loadMoreBtn.textContent = 'End of content';
+      ref.loadMoreBtn.disabled = true;
+      ref.loadMoreBtn.textContent = 'End of content';
     }
   });
 }
@@ -110,11 +110,11 @@ function createImageMarkup(images) {
 }
 
 function addGalleryMarkup(images) {
-  refs.imagesGallery.insertAdjacentHTML('beforeend', createImageMarkup(images));
+  ref.imagesGallery.insertAdjacentHTML('beforeend', createImageMarkup(images));
 }
 
 function clearGalleryMarkup() {
-  refs.imagesGallery.innerHTML = '';
+  ref.imagesGallery.innerHTML = '';
 }
 
 function simpleLightbox() {
@@ -135,32 +135,4 @@ function smoothScroll() {
   });
 }
 
-// async function checkPosition() {
-//   // Нам потребуется знать высоту документа и высоту экрана:
-//   const height = document.body.offsetHeight;
-//   const screenHeight = window.innerHeight;
 
-//   // Они могут отличаться: если на странице много контента,
-//   // высота документа будет больше высоты экрана (отсюда и скролл).
-
-//   // Записываем, сколько пикселей пользователь уже проскроллил:
-//   const scrolled = window.scrollY;
-
-//   // Обозначим порог, по приближении к которому
-//   // будем вызывать какое-то действие.
-//   // В нашем случае — четверть экрана до конца страницы:
-//   const threshold = height - screenHeight / 4;
-
-//   // Отслеживаем, где находится низ экрана относительно страницы:
-//   const position = scrolled + screenHeight;
-
-//   if (position >= threshold) {
-//     // Если мы пересекли полосу-порог, вызываем нужное действие.
-//    onLoadMore();
-//   }
-
-// }
-// (() => {
-//   window.addEventListener('scroll', checkPosition);
-//   // window.addEventListener('resize', checkPosition);
-// })();
