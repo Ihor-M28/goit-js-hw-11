@@ -7,46 +7,46 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 const ref = {
   searchForm: document.querySelector('#search-form'),
   pictureContainer: document.querySelector('.gallery'),
-  loadMoreBtn: document.querySelector('.load-more'),
+  loadingProgressBtn: document.querySelector('.loading-progress'),
   imagesGallery: document.querySelector('.gallery'),
 };
 
 const getImagesService = new GetImagesService();
 
 ref.searchForm.addEventListener('submit', onFormSearch);
-ref.loadMoreBtn.addEventListener('click', onLoadMore);
+ref.loadingProgressBtn.addEventListener('click', onloadingProgress);
 
 function onFormSearch(evt) {
   evt.preventDefault();
-  ref.loadMoreBtn.disabled = false;
+  ref.loadingProgressBtn.disabled = false;
 
   getImagesService.searchQuery = evt.currentTarget.elements.searchQuery.value;
 
   if (getImagesService.searchQuery === '') {
-    ref.loadMoreBtn.classList.add('is-hidden');
+    ref.loadingProgressBtn.classList.add('is-hidden');
     clearGalleryMarkup();
     return Notiflix.Notify.warning(`Enter a search name, please!`);
   }
 
   clearGalleryMarkup();
   
-  ref.loadMoreBtn.classList.add('is-hidden');
+  ref.loadingProgressBtn.classList.add('is-hidden');
   getImagesService.resetPage();
   getImagesService.resetAllImages();
-  ref.loadMoreBtn.disabled = false;
-  ref.loadMoreBtn.textContent = 'Load more';
+  ref.loadingProgressBtn.disabled = false;
+  ref.loadingProgressBtn.textContent = 'Loading progress';
 
   getImagesService.getImages().then(images => {
     clearGalleryMarkup();
     addGalleryMarkup(images);
 
     if (images.hits.length === 0) {
-      refs.loadMoreBtn.classList.add('is-hidden');
+      ref.loadingProgressBtn.classList.add('is-hidden');
       Notiflix.Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.'
       );
     } else {
-      ref.loadMoreBtn.classList.remove('is-hidden');
+      ref.loadingProgressBtn.classList.remove('is-hidden');
       Notiflix.Notify.info(`Hooray! We found ${images.totalHits} images.`);
     }
 
@@ -54,7 +54,7 @@ function onFormSearch(evt) {
   });
 }
 
-async function onLoadMore() {
+async function onloadingProgress() {
   getImagesService.addPage();
 
   await getImagesService.getImages().then(images => {
@@ -64,8 +64,8 @@ async function onLoadMore() {
     smoothScroll();
 
     if (getImagesService.allImages === getImagesService.totalImages) {
-      ref.loadMoreBtn.disabled = true;
-      ref.loadMoreBtn.textContent = 'End of content';
+      ref.loadingProgressBtn.disabled = true;
+      ref.loadingProgressBtn.textContent = 'End of content';
     }
   });
 }
