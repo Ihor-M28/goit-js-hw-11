@@ -61,6 +61,10 @@ body {
   background-color: rgb(221, 212, 239);
 }
 
+.search-form input::placeholder {
+  color: yellow;
+}
+
 .gallery {
   display: flex;
   flex-wrap: wrap;
